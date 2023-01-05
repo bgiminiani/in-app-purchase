@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/voltrue2/in-app-purchase.svg?branch=master)](https://travis-ci.org/voltrue2/in-app-purchase)
 
-A node.js module for in-app purchase (in-app billing) and subscription for Apple, Google Play, Amazon Store, Roku, and Windows.
+A node.js module for in-app purchase (in-app billing) and subscription for Apple, Google Play, Amazon Store, and Roku.
 
 It supports Unity receipt also: [Unity Documentation](https://docs.unity3d.com/Manual/UnityIAPValidatingReceipts.html)
 
@@ -176,9 +176,6 @@ The module requires the above two components to be as a JSON object or a string
 
 A Roku's receipt is a transaction ID string.
 
-### Windows
-
-A Windows' receipt is an XML string.
 
 ### Facebook (Payments Lite)
 
@@ -188,7 +185,6 @@ A Facebook's receipt is signed_request string of payment response.
 
 You may feed different Google public key or Apple password etc to validate receipts of different applications with the same code:
 
-### Windows is NOT Supported
 
 ### Google Public Key
 

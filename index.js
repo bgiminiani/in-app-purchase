@@ -4,14 +4,12 @@ var async = require('./lib/async');
 
 var apple = require('./lib/apple');
 var google = require('./lib/google');
-var windows = require('./lib/windows');
 var amazonManager = require('./lib/amazonManager');
 var facebook = require('./lib/facebook');
 var roku = require('./lib/roku');
 var constants = require('./constants');
 var verbose = require('./lib/verbose');
 
-var IS_WINDOWS = '<\/Receipt>';
 
 var amazon;
 
@@ -32,7 +30,6 @@ function handlePromisedFunctionCb(resolve, reject) {
 module.exports.UNITY = constants.SERVICES.UNITY;
 module.exports.APPLE = constants.SERVICES.APPLE;
 module.exports.GOOGLE = constants.SERVICES.GOOGLE;
-module.exports.WINDOWS = constants.SERVICES.WINDOWS;
 module.exports.AMAZON = constants.SERVICES.AMAZON;
 module.exports.FACEBOOK = constants.SERVICES.FACEBOOK;
 module.exports.ROKU = constants.SERVICES.ROKU;
@@ -40,7 +37,6 @@ module.exports.ROKU = constants.SERVICES.ROKU;
 module.exports.config = function (configIn) {
     apple.readConfig(configIn);
     google.readConfig(configIn);
-    windows.readConfig(configIn);
     amazon = amazonManager.create(configIn);
     facebook.readConfig(configIn);
     roku.readConfig(configIn);
@@ -72,9 +68,6 @@ module.exports.setup = function (cb) {
 module.exports.getService = function (receipt) {
     if (!receipt) {
         throw new Error('Receipt was null or undefined');
-    }
-    if (receipt.indexOf && receipt.indexOf(IS_WINDOWS) !== -1) {
-        return module.exports.WINDOWS;
     }
     if (typeof receipt === 'object') {
         // receipt could be either Google, Amazon, or Unity (Apple or Google or Amazon)
@@ -152,9 +145,6 @@ module.exports.validate = function (service, receipt, cb) {
         case module.exports.GOOGLE:
             google.validatePurchase(null, receipt, cb);
             break;
-        case module.exports.WINDOWS:
-            windows.validatePurchase(receipt, cb);
-            break;
         case module.exports.AMAZON:
             amazon.validatePurchase(null, receipt, cb);
             break;
@@ -198,7 +188,7 @@ module.exports.validateOnce = function (service, secretOrPubKey, receipt, cb) {
         receipt = parseUnityReceipt(receipt);
     }
 
-    if (!secretOrPubKey && service !== module.exports.APPLE && service !== module.exports.WINDOWS) {
+    if (!secretOrPubKey && service !== module.exports.APPLE) {
         verbose.log('<.validateOnce>', service, receipt);
         return cb(new Error('missing secret or public key for dynamic validation:' + service));
     }
@@ -209,9 +199,6 @@ module.exports.validateOnce = function (service, secretOrPubKey, receipt, cb) {
             break;
         case module.exports.GOOGLE:
             google.validatePurchase(secretOrPubKey, receipt, cb);
-            break;
-        case module.exports.WINDOWS:
-            windows.validatePurchase(receipt, cb);
             break;
         case module.exports.AMAZON:
             amazon.validatePurchase(secretOrPubKey, receipt, cb);
@@ -274,8 +261,6 @@ module.exports.getPurchaseData = function (purchaseData, options) {
             return apple.getPurchaseData(purchaseData, options);
         case module.exports.GOOGLE:
             return google.getPurchaseData(purchaseData, options);
-        case module.exports.WINDOWS:
-            return windows.getPurchaseData(purchaseData, options);
         case module.exports.AMAZON:
             return amazon.getPurchaseData(purchaseData, options);
         case module.exports.FACEBOOK:
